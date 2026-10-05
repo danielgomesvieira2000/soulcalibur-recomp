@@ -18,7 +18,7 @@ taken at each decision and logged below.
 | 01 Boot | config builds | menus reachable; 0 untranslated targets / 0 unmapped over 1800 frames | done |
 | 02 Audio | 01 | music + effects audible | done by measurement (key-ons, RMS); **Daniel to listen** |
 | 03 Full play | 02 | arcade run to the ending with no fault; versus; saves load | in progress: fights reached (frame ~1700-3500), seed `0x0C019FC0` pending |
-| 04 Widescreen | 03 for the fight path | 16:9 in fights, no fault over 3600 frames; HUD plan | prototype faults at frame 2272 (emitter defect, translated-only) |
+| 04 Widescreen | 03 for the fight path | 16:9 in fights, no fault over 3600 frames; HUD plan | 3700 frames clean after the engine entry-poll fix (2026-10-05); HUD stretched (anamorphic); **Daniel to judge** |
 | 05 Polish | 03 | intro tile gaps checked against a reference (defect or original?); settings UI | open |
 
 ## Decisions

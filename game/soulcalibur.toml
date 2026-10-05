@@ -42,3 +42,8 @@ dest = 0x8C000400
 source = 0x0C2413EC
 size = 0x38
 dest = 0x8C000600
+
+# Reached through computed jumps in fights (~frame 3000, standard script), proposed by
+# --suggest-config after the entry-poll fix (2026-10-05): 28 calls each, previously interpreted.
+[functions]
+extra = [0x0C019FC0, 0x0C019FE0]
