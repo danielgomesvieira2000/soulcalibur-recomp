@@ -12,24 +12,25 @@
 namespace {
 
 // Horizontal scale of the 3D projection (float). The game recomputes it, so the value is
-// re-asserted every vblank while widescreen is on. 0.75 squeezes a 16:9 view into the 640x480
-// framebuffer (anamorphic); the presenter stretches it back. Source of the address and value:
-// Flycast's built-in widescreen cheat for T1401N (core/cheats.cpp). The HUD is stretched with
-// it -- see docs/GAME-INTERNALS.md "Widescreen".
+// re-asserted every vblank while widescreen is on. (4/3) / aspect squeezes the wider view into the
+// 640x480 framebuffer (anamorphic): 0.75 at 16:9 -- the value of Flycast's widescreen cheat for
+// T1401N (core/cheats.cpp) -- 0.571 at 21:9. The engine renders into a target of the same shape,
+// so the squeeze is undone at full resolution. The HUD is stretched with it: docs/GAME-INTERNALS.md.
 constexpr std::uint32_t kProjectionScaleX = 0x8C266C28;
-constexpr float kWidescreenScaleX = 0.75f;
 
 bool g_patched = false;
 float g_original = 0.0f;
 
-void widescreen(dream::System& sys, bool enabled) {
+void widescreen(dream::System& sys, float aspect) {
     auto& m = sys.memory;
+    const bool enabled = aspect > 4.0f / 3.0f + 0.01f;
+    const float want = (4.0f / 3.0f) / aspect;
     if (enabled) {
         const float now = dreamcomp::read_f32(m, kProjectionScaleX);
-        if (!g_patched || now != kWidescreenScaleX) {
-            if (now != kWidescreenScaleX)
+        if (!g_patched || now != want) {
+            if (!g_patched || (now != want && now != 0.0f && now > want + 0.001f))
                 g_original = now;  // the game's own value, restored when switched off
-            dreamcomp::write_f32(m, kProjectionScaleX, kWidescreenScaleX);
+            dreamcomp::write_f32(m, kProjectionScaleX, want);
             g_patched = true;
         }
     } else if (g_patched) {
@@ -43,8 +44,8 @@ const dreamcomp::PortInfo kInfo = [] {
     p.id = "soulcalibur";
     p.title = "Soulcalibur";
     p.widescreen = &widescreen;
-    p.widescreen_aspect = 16.0f / 9.0f;
     p.widescreen_anamorphic = true;
+    p.max_aspect = 32.0f / 9.0f;
     return p;
 }();
 dreamcomp::RegisterPort g_register(kInfo);
