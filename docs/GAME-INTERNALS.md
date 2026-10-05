@@ -36,7 +36,15 @@ Facts about T1401N V1.000 as measured by this port. Addresses are load-address s
   `pr 0x0C0224E6`) on the standard script; fully interpreted it runs clean → emitter defect,
   under investigation.
 
+## Saves
+
+- Needs 12 free blocks on the VMU in controller port A1. With a fresh formatted card, pressing A on
+  the create prompt (~frame 300) writes the save ("Successfully saved SOULCALIBUR game data file");
+  the next boot reads it (27 block reads, 6 VMU screen writes) and shows "Successfully loaded".
+
 ## Display
 
 - 640x480, framebuffers at `0x200000` / `0x600000` in VRAM (RGB888).
-- Boot logo frames (~120) show corrupted green tiles; open.
+- Intro (frames 60-200): zooming "namco" logo, "Produced by namco / THE LEGEND WILL NEVER DIE! /
+  SOULCALIBUR for Dreamcast", over a green tiled background whose tiles appear in a checkerboard
+  with gaps. Not established whether the gaps are a rendering defect or the original effect.
