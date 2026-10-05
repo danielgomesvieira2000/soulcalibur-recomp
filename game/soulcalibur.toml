@@ -46,4 +46,8 @@ dest = 0x8C000600
 # Reached through computed jumps in fights (~frame 3000, standard script), proposed by
 # --suggest-config after the entry-poll fix (2026-10-05): 28 calls each, previously interpreted.
 [functions]
-extra = [0x0C019FC0, 0x0C019FE0]
+# A 30,000-frame arcade run with scripted mashing (2026-10-05) reached three more:
+# 0x0C06A900 (4012 calls), 0x0C019F72 (76), 0x0C035F56 (1).
+# Mashing seeds 7/11/23 with other characters: 0x0C082BE0 (17124 calls) and its neighbours.
+extra = [0x0C019FC0, 0x0C019FE0, 0x0C06A900, 0x0C019F72, 0x0C035F56,
+         0x0C082BE0, 0x0C083E00, 0x0C083F02, 0x0C083FBC]
