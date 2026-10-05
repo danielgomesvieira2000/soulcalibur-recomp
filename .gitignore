@@ -1,0 +1,37 @@
+# ============================================================
+#  NO GAME DATA IN THIS REPOSITORY. EVER.
+#  Soulcalibur is (c) 1998-1999 Namco (Bandai Namco Entertainment).
+#  This repository ships configuration and original code only;
+#  every player supplies their own disc image.
+#  `python dreamcomp/tools/audit.py assets --repo .` enforces it.
+# ============================================================
+*.cue
+*.gdi
+*.cdi
+*.chd
+*.iso
+*.bin
+*.BIN
+*.P16
+*.P08
+*.P04
+*.PVR
+*.DAT
+*.vmu
+*.vms
+*.vmi
+
+# Extracted from the owner's disc by tools/dc.py setup
+game/extracted/
+game/suggested.toml
+
+# Build output and machine-local state
+build*/
+.dreamcomp/
+shots/
+traces/
+*.ppm
+*.log
+CLAUDE.local.md
+.claude/settings.local.json
+__pycache__/

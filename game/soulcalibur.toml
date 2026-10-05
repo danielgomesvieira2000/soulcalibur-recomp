@@ -1,0 +1,44 @@
+# Soulcalibur (USA), T1401N V1.000 (1999-07-30) -- dream-translate / dreamcomp game config.
+# Format: dreamcomp/engine/docs/game-config.md. Everything here was measured on the owner's disc
+# (docs/GAME-INTERNALS.md says how); nothing from the disc itself is ever committed.
+
+[game]
+id = "soulcalibur"
+title = "Soulcalibur"
+region = "USA"
+product = "T1401N"
+
+[disc]
+# The image is machine-local: `tools/dc.py setup` records it and passes --disc at run time.
+# SHA-1 of the plain 1ST_READ.BIN (3,679,460 bytes) this config was measured against. The
+# launcher refuses a disc whose boot file differs.
+sha1_1st_read = "967ca1fe2e8c7df57a5de1e83d939bed483cc6c9"
+
+[binary]
+path = "extracted/fs/1ST_READ.BIN"   # written by `tools/dc.py setup`, git-ignored
+load_address = 0x8C010000            # where the BIOS loads the file
+link_address = 0x0C010000            # what the literal pools assume (P0 alias of the same RAM)
+entry = 0x8C010000
+
+# Katana installs its exception/interrupt stubs by copying them below the load address. VBR is
+# 0x8C000000 here, so the interrupt entry is VBR+0x600. Found with --suggest-config (2026-10-05):
+# 3357 untranslated calls to 0x8C000600 in 600 frames before, 0 after.
+[[relocations]]  # RAM 0x8c00007c reproduces image 0x0c246c08 for 52 bytes
+source = 0x0C246C08
+size = 0x34
+dest = 0x8C00007C
+
+[[relocations]]  # RAM 0x8c000100 reproduces image 0x0c2413b8 for 56 bytes
+source = 0x0C2413B8
+size = 0x38
+dest = 0x8C000100
+
+[[relocations]]  # RAM 0x8c000400 reproduces image 0x0c2413b8 for 56 bytes
+source = 0x0C2413B8
+size = 0x38
+dest = 0x8C000400
+
+[[relocations]]  # RAM 0x8c000600 reproduces image 0x0c2413ec for 56 bytes (interrupt entry)
+source = 0x0C2413EC
+size = 0x38
+dest = 0x8C000600
