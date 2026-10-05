@@ -50,4 +50,6 @@ dest = 0x8C000600
 # 0x0C06A900 (4012 calls), 0x0C019F72 (76), 0x0C035F56 (1).
 # Mashing seeds 7/11/23 with other characters: 0x0C082BE0 (17124 calls) and its neighbours.
 extra = [0x0C019FC0, 0x0C019FE0, 0x0C06A900, 0x0C019F72, 0x0C035F56,
-         0x0C082BE0, 0x0C083E00, 0x0C083F02, 0x0C083FBC]
+         0x0C082BE0, 0x0C083E00, 0x0C083F02, 0x0C083FBC,
+         # First boot with a freshly formatted per-user memory card (Daniel's playtest).
+         0x0C22ED06, 0x0C22ED10]
