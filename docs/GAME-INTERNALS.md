@@ -36,6 +36,14 @@ Facts about T1401N V1.000 as measured by this port. Addresses are load-address s
   `pr 0x0C0224E6`) on the standard script; fully interpreted it runs clean → emitter defect,
   under investigation.
 
+## HUD
+
+- 2D HUD (health bars, names, timer, win orbs, "BATTLE 1", stage name/track title) is drawn as TA
+  sprites (PCW `a0800009` / `a08c0009` / `a0840009`). Per frame, the HUD sprites share one or two
+  exact depths (1/w 0.113-0.207, following the scene) plus an overlay layer at 2000/1851.85; 3D
+  particle sprites (chandelier flames, dust) each have their own depth (up to 0.41). Measured on
+  17 frames between 2000 and 6800 of a scripted arcade run (dreamcomp docs/HUD.md).
+
 ## Saves
 
 - Needs 12 free blocks on the VMU in controller port A1. With a fresh formatted card, pressing A on

@@ -46,6 +46,10 @@ const dreamcomp::PortInfo kInfo = [] {
     p.widescreen = &widescreen;
     p.widescreen_anamorphic = true;
     p.max_aspect = 32.0f / 9.0f;
+    // HUD (health bars, names, timer, banners) is drawn as sprites sharing one depth per frame
+    // (0.11-0.21, moving with the scene) plus an overlay layer at 1/w = 2000; 3D particles are
+    // sprites too but each at its own depth. Measured on 17 fight frames: docs/GAME-INTERNALS.md.
+    p.hud.enabled = true;
     return p;
 }();
 dreamcomp::RegisterPort g_register(kInfo);
