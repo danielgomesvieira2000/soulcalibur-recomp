@@ -50,6 +50,7 @@ const dreamcomp::PortInfo kInfo = [] {
     // (0.11-0.21, moving with the scene) plus an overlay layer at 1/w = 2000; 3D particles are
     // sprites too but each at its own depth. Measured on 17 fight frames: docs/GAME-INTERNALS.md.
     p.hud.enabled = true;
+    p.players = 2;
     return p;
 }();
 dreamcomp::RegisterPort g_register(kInfo);
