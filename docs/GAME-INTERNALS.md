@@ -28,6 +28,27 @@ Facts about T1401N V1.000 as measured by this port. Addresses are load-address s
   T2). Audio starts at the first Start press (~frame 600); silent before that, which is plausible.
 - The SH-4 talks to the driver only through sound RAM (4 SH-4 AICA register writes per run).
 
+## Frame wait (idle skip)
+
+Found with the host profiler (2026-10-06): `fn_0c2246a0` was the innermost game function in 25 % of
+the game thread's busy time, and guest-PC sampling (`--sample 20000`) put 46.9 % of emulated time
+in its loop at 0x0c2247f8-0x0c22481e:
+
+```
+while (*(u32*)0x8C379E38) {                    // cleared by an interrupt
+    (*(void(**)(u32))0x8C379D34)(*(u32*)0x8C379D38);   // = 0x8C22346C: rts; nop
+    if (*(u32*)0x8C379E34 > *(u32*)0x8C379CF0 + *(u32*)0x8C379CF4 + 1) break;  // timeout
+}
+```
+
+A pass is 22 cycles from the callback's entry check to the next (back-edge check at +18) and
+changes nothing but the clock. The entry hook `idle_wait` on 0x8C22346C (called with pr =
+0x0C224800 and the flag set, previous call exactly 22 cycles earlier) advances the clock by the
+whole passes that end before the next scheduled event, so the event lands on the same check and
+cycle as when spinning. Verified bit-identical: fight scenario audio and four screenshots.
+Effect, real-speed fight on battery: game thread busy 77.9 % -> 67.4 % of wall time, host time
+per frame p50 11.87 -> 11.00 ms, p90 18.0 -> 16.9 ms. `DREAMCOMP_NO_IDLE_SKIP=1` turns it off.
+
 ## Widescreen
 
 - `0x8C266C28` (float) = horizontal projection scale; Flycast writes `0.75` (`0x3F400000`) every

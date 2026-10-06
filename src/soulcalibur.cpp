@@ -3,6 +3,7 @@
 // (game/soulcalibur.toml, sha1_1st_read); docs/GAME-INTERNALS.md says how each was found.
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 
 #include "dream/runtime/system.h"
 #include "dreamcomp/hook.h"
@@ -60,4 +61,35 @@ const dreamcomp::PortInfo kInfo = [] {
 }();
 dreamcomp::RegisterPort g_register(kInfo);
 
+// The frame-wait loop (fn_0c2246a0, 0x0c2247f8-0x0c22481e): while the flag at 0x8C379E38 is set,
+// call the function pointer at 0x8C379D34 -- the empty function 0x8C22346C -- and check a
+// frame-count timeout; an interrupt clears the flag. The game spends ~47 % of its emulated time
+// here in a fight, and every pass costs the host an indirect-call lookup and several reads
+// (tools/profile.py, docs/GAME-INTERNALS.md). A pass is 22 cycles from this callback's entry
+// check (A) to the next, with the loop's back-edge check (B) at +18, and changes nothing but the
+// clock. Called from that loop with the flag still set, the callback skips the whole passes that
+// end before the next scheduled event (the largest k with A_k still short of it) by advancing the
+// clock k * 22: the pass in which the event falls then runs for real, and the event is delivered
+// at the same check, on the same cycle, as when spinning -- interrupts, sound, timers and the
+// game's own timing are bit-identical (scenario audio and screenshots compared). It acts only
+// when the previous call came exactly one pass earlier, i.e. inside the steady loop.
+// DREAMCOMP_NO_IDLE_SKIP=1 turns it off for comparison.
+constexpr std::uint32_t kWaitLoopReturn = 0x0C224800;  // pr inside the loop's call
+constexpr std::uint32_t kWaitFlag = 0x8C379E38;
+constexpr std::uint64_t kPassCycles = 22;
+const bool g_idle_skip = std::getenv("DREAMCOMP_NO_IDLE_SKIP") == nullptr;
+std::uint64_t g_last_call = 0;
+
 }  // namespace
+
+DC_HOOK_ENTRY(idle_wait) {
+    const std::uint64_t now = c.cycles;
+    const bool steady = now - g_last_call == kPassCycles;
+    if (g_idle_skip && steady && c.pr == kWaitLoopReturn && m.read32(kWaitFlag) != 0 &&
+        c.next_event > now + kPassCycles && c.next_event - now < 200'000'000u) {
+        const std::uint64_t k = (c.next_event - 1 - now) / kPassCycles;
+        c.cycles = now + k * kPassCycles;
+    }
+    g_last_call = c.cycles;
+    return false;  // run the (empty) function
+}
