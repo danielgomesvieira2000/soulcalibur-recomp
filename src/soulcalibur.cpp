@@ -50,6 +50,11 @@ const dreamcomp::PortInfo kInfo = [] {
     // (0.11-0.21, moving with the scene) plus an overlay layer at 1/w = 2000; 3D particles are
     // sprites too but each at its own depth. Measured on 17 fight frames: docs/GAME-INTERNALS.md.
     p.hud.enabled = true;
+    // Character select draws its portraits as flat polygons, and the selected one and its frame
+    // each at a depth of their own (1/w 3 and 5.01); no 3D geometry comes closer than about 0.3,
+    // so anything at 1/w >= 1 is 2D.
+    p.hud.polygons = true;
+    p.hud.overlay_z = 1.0f;
     p.players = 2;
     return p;
 }();
