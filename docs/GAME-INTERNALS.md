@@ -48,6 +48,8 @@ whole passes that end before the next scheduled event, so the event lands on the
 cycle as when spinning. Verified bit-identical: fight scenario audio and four screenshots.
 Effect, real-speed fight on battery: game thread busy 77.9 % -> 67.4 % of wall time, host time
 per frame p50 11.87 -> 11.00 ms, p90 18.0 -> 16.9 ms. `DREAMCOMP_NO_IDLE_SKIP=1` turns it off.
+Since 2026-10-06 the hook forwards to dreamcomp's shared `IdleWait` (include/dreamcomp/idle.h);
+re-verified bit-identical (fight: audio, four screenshots; 60.4 -> 52.3 G game-thread cycles).
 
 ## Widescreen
 

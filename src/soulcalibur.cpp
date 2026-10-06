@@ -7,6 +7,7 @@
 
 #include "dream/runtime/system.h"
 #include "dreamcomp/hook.h"
+#include "dreamcomp/idle.h"
 #include "dreamcomp/port.h"
 #include "dreamcomp/settings.h"
 
@@ -72,24 +73,13 @@ dreamcomp::RegisterPort g_register(kInfo);
 // clock k * 22: the pass in which the event falls then runs for real, and the event is delivered
 // at the same check, on the same cycle, as when spinning -- interrupts, sound, timers and the
 // game's own timing are bit-identical (scenario audio and screenshots compared). It acts only
-// when the previous call came exactly one pass earlier, i.e. inside the steady loop.
-// DREAMCOMP_NO_IDLE_SKIP=1 turns it off for comparison.
-constexpr std::uint32_t kWaitLoopReturn = 0x0C224800;  // pr inside the loop's call
-constexpr std::uint32_t kWaitFlag = 0x8C379E38;
-constexpr std::uint64_t kPassCycles = 22;
-const bool g_idle_skip = std::getenv("DREAMCOMP_NO_IDLE_SKIP") == nullptr;
-std::uint64_t g_last_call = 0;
+// when the previous call came exactly one pass earlier, i.e. inside the steady loop
+// (dreamcomp/idle.h). DREAMCOMP_NO_IDLE_SKIP=1 turns it off for comparison.
+dreamcomp::IdleWait g_wait{.return_pc = 0x0C224800, .flag = 0x8C379E38, .pass_cycles = 22};
 
 }  // namespace
 
 DC_HOOK_ENTRY(idle_wait) {
-    const std::uint64_t now = c.cycles;
-    const bool steady = now - g_last_call == kPassCycles;
-    if (g_idle_skip && steady && c.pr == kWaitLoopReturn && m.read32(kWaitFlag) != 0 &&
-        c.next_event > now + kPassCycles && c.next_event - now < 200'000'000u) {
-        const std::uint64_t k = (c.next_event - 1 - now) / kPassCycles;
-        c.cycles = now + k * kPassCycles;
-    }
-    g_last_call = c.cycles;
+    g_wait.on_call(c, m);
     return false;  // run the (empty) function
 }
