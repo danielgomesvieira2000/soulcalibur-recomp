@@ -90,3 +90,10 @@ opponent's portrait now against "VS". Three entries cover large areas (8,42-381,
 368,208-610,442; 28,48-270,272, all `center`), saved while some outlines spanned most of the
 screen. Kept as Daniel promoted them; review in the editor (Space pauses on the VS screen).
 
+Second promotion 2026-10-07 (14 entries): `rect=-2,-2,642,482 anchor=stretch tcw=0x00000000,0x28e6d200`.
+One editor click hit an element outlined as the whole screen; that created a whole-screen
+override and every later click on a piece with those textures cycled the same entry. Effect
+(against the first promotion): untextured 2D pieces and texture 0x28E6D200 are stretched
+everywhere -- the main-menu box frame widens around unstretched text, "TIME UP!!" is stretched,
+the VS screen's name bars span the width. Flagged to Daniel; the editor flaw is being fixed.
+
