@@ -52,7 +52,12 @@ dest = 0x8C000600
 extra = [0x0C019FC0, 0x0C019FE0, 0x0C06A900, 0x0C019F72, 0x0C035F56,
          0x0C082BE0, 0x0C083E00, 0x0C083F02, 0x0C083FBC,
          # First boot with a freshly formatted per-user memory card (Daniel's playtest).
-         0x0C22ED06, 0x0C22ED10]
+         0x0C22ED06, 0x0C22ED10,
+         # Daniel's playtest 2026-10-07 (~20 min, mode not recorded): indirect calls from
+         # 0x0C070298 into 0x0C0920C0..0x0C0927A0 (image code, RAM there never rewritten).
+         0x0C0920C0, 0x0C092152, 0x0C0921BA, 0x0C0922D0, 0x0C092484, 0x0C0924B2,
+         0x0C092500, 0x0C09253C, 0x0C092558, 0x0C0925FA, 0x0C0926EC, 0x0C09270C,
+         0x0C092754, 0x0C092786]
 
 [hooks]
 # The frame-wait loop's callback (an empty function, `rts`): skips the idle spin (src/soulcalibur.cpp).
