@@ -97,3 +97,8 @@ override and every later click on a piece with those textures cycled the same en
 everywhere -- the main-menu box frame widens around unstretched text, "TIME UP!!" is stretched,
 the VS screen's name bars span the width. Flagged to Daniel; the editor flaw is being fixed.
 
+Cleanup 2026-10-07 (Daniel's call, after the editor fix, framework playbook T20): removed the
+whole-screen stretch entry and the three large `center` entries (8,42-381,302; 368,208-610,442;
+28,48-270,272). 10 entries remain: against no overrides, fight HUD frames 0.6 % of pixels, VS
+screen, main menu and character select 0.00 %.
+
