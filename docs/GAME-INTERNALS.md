@@ -79,3 +79,14 @@ re-verified bit-identical (fight: audio, four screenshots; 60.4 -> 52.3 G game-t
 - Intro (frames 60-200): zooming "namco" logo, "Produced by namco / THE LEGEND WILL NEVER DIE! /
   SOULCALIBUR for Dreamcast", over a green tiled background whose tiles appear in a checkerboard
   with gaps. Not established whether the gaps are a rendering defect or the original effect.
+
+## HUD overrides (game/hud_overrides.ini)
+
+13 entries promoted 2026-10-07 from Daniel's first F1 editor session (`tools/hud_promote.py`).
+Effect against no overrides (`scenario.py --compare`, Expanded): fight HUD 0.6 % of pixels;
+the VS / stage-intro screen (fight frame 1500, menus 1250 and 1450) 22-36 %: both portraits and
+their name blocks anchored to the centre (their 4:3 positions) instead of the edges, the
+opponent's portrait now against "VS". Three entries cover large areas (8,42-381,302;
+368,208-610,442; 28,48-270,272, all `center`), saved while some outlines spanned most of the
+screen. Kept as Daniel promoted them; review in the editor (Space pauses on the VS screen).
+
