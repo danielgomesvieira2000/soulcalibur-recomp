@@ -102,3 +102,20 @@ whole-screen stretch entry and the three large `center` entries (8,42-381,302; 3
 28,48-270,272). 10 entries remain: against no overrides, fight HUD frames 0.6 % of pixels, VS
 screen, main menu and character select 0.00 %.
 
+
+Third promotion 2026-10-08 (Daniel's F2 sessions: **Centre all** plus edits): 772 entries, one
+per piece (text gets one per letter), 621 `center`. Checked with `scenario.py --compare`
+(Expanded, `--speed max`) against the 10-entry file:
+
+| Scenario | Change |
+|---|---|
+| fight (1500-4500) | 0.00 % |
+| menus 1000, mainmenu (all shots) | 0.05 %: "TM" beside the logo moves from the right edge to its 4:3 place next to the logo |
+| menus 1800 (stage intro) | 0.27 %: "BGM" moves from the left edge to beside the track title |
+| attract 2700 (sword intro) | 1.2 %: a few of the thin background speed lines shift (untextured centre entries catch them) |
+
+Dropped before committing: `rect=200,202,382,346 anchor=center tcw=0x00000000`. It caught
+background strips of the attract sword intro and centred them: two black vertical bars across
+the screen (4.8 % of pixels). Found by bisecting the file by prefix on attract frame 2700. Same
+pattern as T20 (large rectangle, untextured word). Cost: fight `--speed max` host time 19.27 s
+-> 19.37-19.43 s (two runs each), about +0.5-0.8 %.
