@@ -1,3 +1,5 @@
+<img src="game/icon.png" width="96" align="right" alt="">
+
 # Soulcalibur: Recompiled (Dreamcast)
 
 A native PC port of **Soulcalibur** (Dreamcast, USA, Namco 1999), built with
@@ -38,6 +40,8 @@ Accepted disc formats: Redump `.cue`/`.bin`, `.gdi`, `.chd`.
   [dream-recomp](https://github.com/phobos665/dream-recomp) (phobos665), which draws on
   [Flycast](https://github.com/flyinghead/flycast).
 - Widescreen value from Flycast's widescreen cheat table.
+- Icon: original artwork for this port (`tools/make_icon.py`), not taken from the game or its
+  packaging.
 
 ## AI use
 
